@@ -34,13 +34,25 @@ NTVFileChooserVisitor >> buildWindowsFileChooserCommand [
 			  << 'Add-Type -AssemblyName System.Windows.Forms;';
 			  <<
 				  ' $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ InitialDirectory = '.
-		  (self options path
-			   ifNil: [stream <<  '[Environment]::GetFolderPath(''Desktop'')' ]
-			   ifNotNil: [ :p | 
-				   stream
-					   << '''';
-					   << p;
-					   << '''' ]).
+		  self options path
+			  ifNil: [ stream << '[Environment]::GetFolderPath(''Desktop'')' ]
+			  ifNotNil: [ :p | 
+				  stream
+					  << '''';
+					  << p;
+					  << '''' ].
+		  self options extensions ifNotNil: [ :extensions | 
+			  stream << String crlf.
+			  stream << 'Filter = ''Files '. extensions
+				  do: [ :extension | 
+					  stream
+						  << '(*.';
+						  << extension;
+						  << ')|*.';
+						  << extension;
+						  << '' ]
+				  separatedBy: [ stream << '|' ].
+			  stream << '''' ].
 		  stream
 			  << ' };';
 			  << '$null = $FileBrowser.ShowDialog();';
