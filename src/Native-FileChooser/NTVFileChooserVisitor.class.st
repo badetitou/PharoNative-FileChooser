@@ -76,7 +76,7 @@ NTVFileChooserVisitor >> visitWindows: aPlatform [
 							            (directory / 'file-chooser-script.ps1') pathString;
 						            << '"' ]);
 		           runAndWait.
-	^ (self winTmpOutLocation readStreamEncoded: #'utf-16' do: [:stream | stream upToEnd ]) asFileReference
+	^ (self winTmpOutLocation readStreamEncoded: #'utf-16' do: [:stream | stream upToEnd ]) trim asFileReference
 ]
 
 { #category : #'visiting - windows' }
