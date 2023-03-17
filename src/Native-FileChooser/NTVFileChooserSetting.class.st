@@ -13,11 +13,12 @@ NTVFileChooserSetting class >> browsingSettingsOn: aBuilder [
 	"create empty #codeBrowsing and #qualityAssistant settings groups so the tools can use it"
 
 	<systemsettings>
-	(aBuilder setting: #nativeFileChooser)
+	(aBuilder pickOne: #nativeFileChooser)
 				label: 'Use the native file chooser if possible';
-				default: true;
+				default: NTVFileChooserVisitor;
 				parent: #NativeSettings;
-				target: self
+				target: self;
+				domainValues: { nil. NTVFileChooserVisitor }
 ]
 
 { #category : #accessing }
