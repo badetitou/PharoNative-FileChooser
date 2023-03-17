@@ -2,7 +2,8 @@ Class {
 	#name : #NTVFileChooserVisitor,
 	#superclass : #OSPlatformVisitor,
 	#instVars : [
-		'locationWinProcessOutFile'
+		'locationWinProcessOutFile',
+		'options'
 	],
 	#category : #'Native-FileChooser'
 }
@@ -14,14 +15,34 @@ NTVFileChooserVisitor class >> choose [
 		  visit
 ]
 
+{ #category : #api }
+NTVFileChooserVisitor class >> chooseExistingFileReference: title extensions: exts path: path preview: preview [
+
+	| fileChooser |
+	fileChooser := self new.
+	exts ifNotNil: [ :e | fileChooser options extensions: e ].
+	path ifNotNil: [ :e | fileChooser options path: e ].
+	preview ifNotNil: [ :e | fileChooser options preview: e ].
+	^ fileChooser visit
+]
+
 { #category : #'visiting - windows' }
-NTVFileChooserVisitor >> buildWindowsNotificationCommand [
+NTVFileChooserVisitor >> buildWindowsFileChooserCommand [
 
 	^ String streamContents: [ :stream | 
 		  stream
 			  << 'Add-Type -AssemblyName System.Windows.Forms;';
 			  <<
-				  ' $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ InitialDirectory = [Environment]::GetFolderPath(''Desktop'') };';
+				  ' $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ InitialDirectory = '.
+		  (self options path
+			   ifNil: [stream <<  '[Environment]::GetFolderPath(''Desktop'')' ]
+			   ifNotNil: [ :p | 
+				   stream
+					   << '''';
+					   << p;
+					   << '''' ]).
+		  stream
+			  << ' };';
 			  << '$null = $FileBrowser.ShowDialog();';
 			  << '$FileBrowser.FileName > "';
 			  << self winTmpOutLocationString;
@@ -42,7 +63,14 @@ For Each arg In args
 Next
 ' ].
 	directory / 'file-chooser-script.ps1' writeStreamDo: [ :stream | 
-		stream << self buildWindowsNotificationCommand ]
+		stream << self buildWindowsFileChooserCommand ]
+]
+
+{ #category : #'visiting - windows' }
+NTVFileChooserVisitor >> initialize [
+
+	super initialize.
+	options := NTVFileChooserOptions new
 ]
 
 { #category : #'visiting - windows' }
@@ -55,6 +83,18 @@ NTVFileChooserVisitor >> locationWinProcessOutFile [
 NTVFileChooserVisitor >> locationWinProcessOutFile: anObject [
 
 	locationWinProcessOutFile := anObject
+]
+
+{ #category : #accessing }
+NTVFileChooserVisitor >> options [
+
+	^ options
+]
+
+{ #category : #accessing }
+NTVFileChooserVisitor >> options: anObject [
+
+	options := anObject
 ]
 
 { #category : #'visiting - windows' }
