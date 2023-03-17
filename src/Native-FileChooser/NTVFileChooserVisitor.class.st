@@ -43,15 +43,20 @@ NTVFileChooserVisitor >> buildWindowsFileChooserCommand [
 					  << '''' ].
 		  self options extensions ifNotNil: [ :extensions | 
 			  stream << String crlf.
-			  stream << 'Filter = ''Files '. extensions
+			  stream << 'Filter = ''Files ('.
+			  extensions
 				  do: [ :extension | 
 					  stream
-						  << '(*.';
-						  << extension;
-						  << ')|*.';
-						  << extension;
-						  << '' ]
-				  separatedBy: [ stream << '|' ].
+						  << '*.';
+						  << extension ]
+				  separatedBy: [ stream << ';' ].
+				stream << ')|'.
+				extensions
+				  do: [ :extension | 
+					  stream
+						  << '*.';
+						  << extension ]
+				  separatedBy: [ stream << ';' ].
 			  stream << '''' ].
 		  stream
 			  << ' };';
