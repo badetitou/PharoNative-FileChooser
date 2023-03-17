@@ -23,6 +23,7 @@ NTVFileChooserVisitor class >> chooseExistingFileReference: title extensions: ex
 	exts ifNotNil: [ :e | fileChooser options extensions: e ].
 	path ifNotNil: [ :e | fileChooser options path: e ].
 	preview ifNotNil: [ :e | fileChooser options preview: e ].
+	title ifNotNil: [ :e | fileChooser options title: e ].
 	^ fileChooser visit
 ]
 
@@ -50,14 +51,20 @@ NTVFileChooserVisitor >> buildWindowsFileChooserCommand [
 						  << '*.';
 						  << extension ]
 				  separatedBy: [ stream << ';' ].
-				stream << ')|'.
-				extensions
+			  stream << ')|'.
+			  extensions
 				  do: [ :extension | 
 					  stream
 						  << '*.';
 						  << extension ]
 				  separatedBy: [ stream << ';' ].
 			  stream << '''' ].
+		  self options title ifNotNil: [ :title | 
+			  stream << String crlf.
+			  stream
+				  << 'Title = ''';
+				  << title;
+				  << '''' ].
 		  stream
 			  << ' };';
 			  << '$null = $FileBrowser.ShowDialog();';

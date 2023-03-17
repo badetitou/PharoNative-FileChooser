@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'extensions',
 		'path',
-		'preview'
+		'preview',
+		'title'
 	],
 	#category : #'Native-FileChooser'
 }
@@ -43,4 +44,16 @@ NTVFileChooserOptions >> preview [
 NTVFileChooserOptions >> preview: anObject [
 
 	preview := anObject
+]
+
+{ #category : #accessing }
+NTVFileChooserOptions >> title [
+
+	^ title
+]
+
+{ #category : #accessing }
+NTVFileChooserOptions >> title: anObject [
+
+	title := anObject
 ]
