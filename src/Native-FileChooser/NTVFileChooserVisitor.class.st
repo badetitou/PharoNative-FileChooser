@@ -40,7 +40,8 @@ NTVFileChooserVisitor >> buildWindowsFileChooserCommand [
 			  ifNotNil: [ :p | 
 				  stream
 					  << '''';
-					  << p;
+					  <<
+						  ((p isKindOf: AbstractFileReference) ifTrue: [ p pathString ]);
 					  << '''' ].
 		  self options extensions ifNotNil: [ :extensions | 
 			  stream << String crlf.
