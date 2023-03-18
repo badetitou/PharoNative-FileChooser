@@ -130,9 +130,26 @@ NTVFileChooserVisitor >> options: anObject [
 { #category : #'visiting - unix' }
 NTVFileChooserVisitor >> visitUnix: aPlatform [
 
+	| args |
+	args := OrderedCollection new.
+	args add: '--file-selection'.
+	self options extensions ifNotNil: [ :extensions | 
+		args add: (String streamContents: [ :stream | 
+				 stream << '--file-filter=Files | '.
+				 extensions
+					 do: [ :extension | 
+						 stream
+							 << '*.';
+							 << extension ]
+					 separatedBy: [ stream << ' ' ] ]) ].
+	self options title ifNotNil: [ :title | 
+		args add: (String streamContents: [ :stream | 
+				 stream
+					 << '--title=';
+					 << title ]) ].
 	OSSUnixSubprocess new
 		command: 'zenity';
-		arguments: { '--file-selection' };
+		arguments: args;
 		redirectStdout;
 		runAndWaitOnExitDo: [ :arg :resultString :resultError | 
 			^ resultString trim asFileReference ]
