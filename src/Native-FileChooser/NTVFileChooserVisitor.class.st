@@ -1,3 +1,8 @@
+"
+I am a OS Visitor that aims to open the file choose of the native system.
+
+I comply the FileChooser API of Pharo to be use easily 
+"
 Class {
 	#name : #NTVFileChooserVisitor,
 	#superclass : #OSPlatformVisitor,
@@ -120,6 +125,17 @@ NTVFileChooserVisitor >> options [
 NTVFileChooserVisitor >> options: anObject [
 
 	options := anObject
+]
+
+{ #category : #'visiting - unix' }
+NTVFileChooserVisitor >> visitUnix: aPlatform [
+
+	OSSUnixSubprocess new
+		command: 'zenity';
+		arguments: { '--file-selection' };
+		redirectStdout;
+		runAndWaitOnExitDo: [ :arg :resultString :resultError | 
+			^ resultString trim asFileReference ]
 ]
 
 { #category : #'visiting - windows' }
