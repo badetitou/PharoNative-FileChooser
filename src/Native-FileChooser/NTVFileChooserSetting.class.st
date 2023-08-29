@@ -20,6 +20,12 @@ NTVFileChooserSetting class >> browsingSettingsOn: aBuilder [
 				target: self
 ]
 
+{ #category : #settings }
+NTVFileChooserSetting class >> initialize [
+
+	self nativeFileChooser: true
+]
+
 { #category : #accessing }
 NTVFileChooserSetting class >> nativeFileChooser [
 

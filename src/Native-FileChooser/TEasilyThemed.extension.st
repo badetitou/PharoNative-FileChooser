@@ -6,7 +6,7 @@ TEasilyThemed >> chooseExistingFileReference: title extensions: exts path: path 
 	"Answer the result of a file name chooser dialog with the given title, extensions
 	to show, path and preview type."
 
-	NTVFileChooserSetting nativeFileChooser ifTrue: [ 
+	(NTVFileChooserSetting nativeFileChooser isNotNil and: [NTVFileChooserSetting nativeFileChooser]) ifTrue: [ 
 		^ NTVFileChooserVisitor
 			  chooseExistingFileReference: title
 			  extensions: exts
