@@ -17,12 +17,12 @@ BaselineOfNativeFileChooser >> baseline: spec [
 { #category : #baselines }
 BaselineOfNativeFileChooser >> defineDependencies: spec [
 
-	spec baseline: 'OSSubprocess' with: [ 
+	spec baseline: 'OSSubprocess' with: [
 		spec repository:
-			'github://pharo-contributions/OSSubprocess:master/repository' ].
+			'github://pharo-contributions/OSSubprocess:v1.4.2/repository' ].
 	spec
 		baseline: 'OSWinSubprocess'
-		with: [ 
+		with: [
 		spec repository: 'github://pharo-contributions/OSWinSubprocess:v1' ].
 	spec
 		baseline: 'NativeSettings'
